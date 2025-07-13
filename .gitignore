@@ -1,0 +1,3 @@
+/wordpress/wp-content/plugins/*
+!/wordpress/wp-content/plugins/link-in-bio/ 
+!/wordpress/wp-content/plugins/link-in-bio/*

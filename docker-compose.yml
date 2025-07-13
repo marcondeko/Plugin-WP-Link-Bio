@@ -1,7 +1,7 @@
 services:
   db:
     image: mysql:5.7
-    container_name: wordpress_db
+    container_name: wordpress_db_plugin
     environment:
       MYSQL_DATABASE: wordpress
       MYSQL_USER: wordpress
@@ -14,13 +14,12 @@ services:
 
   wordpress:
     image: wordpress:latest
-    container_name: wordpress_app
+    container_name: wordpress_plugin
     depends_on:
       - db
     ports:
-      - "8000:80"
+      - "8010:80"
     volumes:
-      - ./wordpress/wp-content/themes:/var/www/html/wp-content/themes
       - ./wordpress/wp-content/plugins:/var/www/html/wp-content/plugins
     environment:
       WORDPRESS_DB_HOST: db:3306
@@ -32,11 +31,11 @@ services:
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
-    container_name: phpmyadmin_app
+    container_name: phpmyadmin_plugin
     depends_on:
       - db
     ports:
-      - "8080:80"
+      - "8081:80"
     environment:
       PMA_HOST: db
       MYSQL_ROOT_PASSWORD: root_password
