@@ -1,0 +1,216 @@
+<?php
+defined('ABSPATH') || exit;
+
+class LinkInBio_Admin_Settings {
+    public function __construct() {
+        add_action('admin_menu', [$this, 'add_admin_menu']);
+        add_action('admin_init', [$this, 'settings_init']);
+    }
+    
+    public function add_admin_menu() {
+        add_menu_page(
+            'Link in Bio',
+            'Link in Bio',
+            'manage_options',
+            'link_in_bio',
+            [$this, 'settings_page'],
+            'dashicons-admin-links',
+            76
+        );
+    }
+    
+    public function settings_init() {
+        register_setting('link_in_bio_settings', 'link_in_bio_options');
+        
+        // Seção principal
+        add_settings_section(
+            'link_in_bio_profile_section',
+            'Configurações de Perfil',
+            [$this, 'profile_section_callback'],
+            'link_in_bio'
+        );
+        
+        // Campos do perfil
+        add_settings_field(
+            'profile_image_url',
+            'URL da Imagem de Perfil',
+            [$this, 'profile_image_field_render'],
+            'link_in_bio',
+            'link_in_bio_profile_section'
+        );
+        
+        add_settings_field(
+            'profile_title',
+            'Título do Perfil',
+            [$this, 'profile_title_field_render'],
+            'link_in_bio',
+            'link_in_bio_profile_section'
+        );
+        
+        add_settings_field(
+            'profile_bio',
+            'Biografia',
+            [$this, 'profile_bio_field_render'],
+            'link_in_bio',
+            'link_in_bio_profile_section'
+        );
+        
+        // Seção de links
+        add_settings_section(
+            'link_in_bio_links_section',
+            'Gerenciamento de Links',
+            [$this, 'links_section_callback'],
+            'link_in_bio'
+        );
+        
+        add_settings_field(
+            'links',
+            'Seus Links',
+            [$this, 'links_field_render'],
+            'link_in_bio',
+            'link_in_bio_links_section'
+        );
+    }
+    
+    // Callbacks dos campos
+    public function profile_section_callback() {
+        echo '<p>Configure as informações básicas do seu perfil</p>';
+    }
+    
+    public function profile_image_field_render() {
+        $options = get_option('link_in_bio_options');
+        ?>
+        <input type="text" name="link_in_bio_options[profile_image_url]" 
+               value="<?php echo esc_url($options['profile_image_url'] ?? ''); ?>" 
+               class="regular-text" 
+               placeholder="https://example.com/image.jpg">
+        <p class="description">Insira a URL completa da sua imagem de perfil</p>
+        <?php
+    }
+    
+    public function profile_title_field_render() {
+        $options = get_option('link_in_bio_options');
+        ?>
+        <input type="text" name="link_in_bio_options[profile_title]" 
+               value="<?php echo esc_attr($options['profile_title'] ?? 'Seu Nome ou Marca'); ?>" 
+               class="regular-text">
+        <?php
+    }
+    
+    public function profile_bio_field_render() {
+        $options = get_option('link_in_bio_options');
+        ?>
+        <textarea name="link_in_bio_options[profile_bio]" 
+                  rows="3" 
+                  class="large-text"><?php echo esc_textarea($options['profile_bio'] ?? 'Bem-vindo(a) à minha página de links!'); ?></textarea>
+        <?php
+    }
+    
+    public function links_section_callback() {
+        echo '<p>Adicione e organize os links que aparecerão na sua página</p>';
+    }
+    
+    public function links_field_render() {
+        $options = get_option('link_in_bio_options');
+        $links = $options['links'] ?? [];
+        ?>
+        <div id="link-in-bio-links-container" class="link-in-bio-links-container">
+            <?php foreach ($links as $index => $link) : ?>
+                <div class="link-in-bio-link-group mb-4 p-4 bg-gray-100 rounded-lg">
+                    <div class="flex flex-wrap gap-4 mb-2">
+                        <div class="flex-grow">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Título</label>
+                            <input type="text" 
+                                   name="link_in_bio_options[links][<?php echo esc_attr($index); ?>][title]" 
+                                   value="<?php echo esc_attr($link['title']); ?>" 
+                                   class="regular-text" 
+                                   placeholder="Ex: Meu Instagram">
+                        </div>
+                        <div class="flex-grow">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">URL</label>
+                            <input type="url" 
+                                   name="link_in_bio_options[links][<?php echo esc_attr($index); ?>][url]" 
+                                   value="<?php echo esc_url($link['url']); ?>" 
+                                   class="regular-text" 
+                                   placeholder="https://example.com">
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Ícone (opcional)</label>
+                            <input type="text" 
+                                   name="link_in_bio_options[links][<?php echo esc_attr($index); ?>][icon]" 
+                                   value="<?php echo esc_attr($link['icon'] ?? ''); ?>" 
+                                   class="regular-text" 
+                                   placeholder="Emoji ou código de ícone">
+                        </div>
+                        <button type="button" class="button button-secondary link-in-bio-remove-link mt-6">Remover</button>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        
+        <button type="button" id="link-in-bio-add-link" class="button button-primary">Adicionar Link</button>
+        
+        <script>
+        jQuery(document).ready(function($) {
+            $('#link-in-bio-add-link').click(function() {
+                const index = Date.now();
+                const html = `
+                <div class="link-in-bio-link-group mb-4 p-4 bg-gray-100 rounded-lg">
+                    <div class="flex flex-wrap gap-4 mb-2">
+                        <div class="flex-grow">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Título</label>
+                            <input type="text" 
+                                   name="link_in_bio_options[links][${index}][title]" 
+                                   class="regular-text" 
+                                   placeholder="Ex: Meu Instagram">
+                        </div>
+                        <div class="flex-grow">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">URL</label>
+                            <input type="url" 
+                                   name="link_in_bio_options[links][${index}][url]" 
+                                   class="regular-text" 
+                                   placeholder="https://example.com">
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Ícone (opcional)</label>
+                            <input type="text" 
+                                   name="link_in_bio_options[links][${index}][icon]" 
+                                   class="regular-text" 
+                                   placeholder="Emoji ou código de ícone">
+                        </div>
+                        <button type="button" class="button button-secondary link-in-bio-remove-link mt-6">Remover</button>
+                    </div>
+                </div>`;
+                $('#link-in-bio-links-container').append(html);
+            });
+            
+            $(document).on('click', '.link-in-bio-remove-link', function() {
+                $(this).closest('.link-in-bio-link-group').remove();
+            });
+        });
+        </script>
+        <?php
+    }
+    
+    public function settings_page() {
+        ?>
+        <div class="wrap">
+            <h1 class="wp-heading-inline">Configurações do Link in Bio</h1>
+            
+            <form action="options.php" method="post">
+                <?php
+                settings_fields('link_in_bio_settings');
+                do_settings_sections('link_in_bio');
+                submit_button('Salvar Configurações');
+                ?>
+            </form>
+        </div>
+        <?php
+    }
+}
+
+new LinkInBio_Admin_Settings();

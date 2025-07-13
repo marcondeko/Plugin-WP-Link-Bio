@@ -1,0 +1,59 @@
+/* Estilos gerais */
+.link-in-bio-links-container {
+    margin-bottom: 20px;
+}
+
+.link-in-bio-link {
+    background: #f6f7f7;
+    border-left: 4px solid #2271b1;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.link-in-bio-link-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.link-in-bio-link-row input {
+    flex: 1;
+    max-width: 100%;
+}
+
+.link-in-bio-link-row .button {
+    margin: 0;
+}
+
+.link-in-bio-profile-image img {
+    border-radius: 50%;
+    border: 2px solid #ddd;
+}
+
+/* Melhoria para mobile */
+@media (max-width: 782px) {
+    .link-in-bio-link-row {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .link-in-bio-link-row input {
+        width: 100%;
+    }
+}
+
+.link-in-bio-profile-bio textarea {
+    min-height: 100px;
+    width: 100%;
+    max-width: 600px;
+}
+
+#link-in-bio-remove-image{
+    color:red;
+    border-color: red;
+}
+
+.btn-link-in-bio-remove{
+    color: red !important;;
+    border-color: red!important;
+};
