@@ -1,3 +1,4 @@
 /wordpress/wp-content/plugins/*
+/wordpress/wp-content/themes/*
 !/wordpress/wp-content/plugins/link-in-bio/ 
 !/wordpress/wp-content/plugins/link-in-bio/*
