@@ -1,59 +1,67 @@
-/* Estilos gerais */
+/* Estilos gerais para o container de links */
 .link-in-bio-links-container {
-    margin-bottom: 20px;
+    margin-bottom: 20px; /* Espaço inferior entre os blocos de links e outros elementos */
 }
 
+/* Estilo individual de cada link na lista */
 .link-in-bio-link {
-    background: #f6f7f7;
-    border-left: 4px solid #2271b1;
-    padding: 15px;
-    margin-bottom: 15px;
+    background: #f6f7f7; /* Cor de fundo suave */
+    border-left: 4px solid #2271b1; /* Borda esquerda azul para destaque */
+    padding: 15px; /* Espaçamento interno */
+    margin-bottom: 15px; /* Espaço entre os links */
 }
 
+/* Linha que agrupa input + botão */
 .link-in-bio-link-row {
-    display: flex;
-    gap: 10px;
-    align-items: center;
+    display: flex; /* Alinha os itens horizontalmente */
+    gap: 10px; /* Espaçamento entre os elementos */
+    align-items: center; /* Alinha verticalmente os elementos ao centro */
 }
 
+/* Input dos links */
 .link-in-bio-link-row input {
-    flex: 1;
-    max-width: 100%;
+    flex: 1; /* Ocupa o maior espaço possível */
+    max-width: 100%; /* Evita que ultrapasse o container */
 }
 
+/* Botões de ação (Adicionar/Remover) */
 .link-in-bio-link-row .button {
-    margin: 0;
+    margin: 0; /* Remove margens padrão */
 }
 
+/* Estilo da imagem de perfil */
 .link-in-bio-profile-image img {
-    border-radius: 50%;
-    border: 2px solid #ddd;
+    border-radius: 50%; /* Imagem circular */
+    border: 2px solid #ddd; /* Borda cinza clara */
 }
 
-/* Melhoria para mobile */
+/* Responsividade para telas menores (até 782px) */
 @media (max-width: 782px) {
     .link-in-bio-link-row {
-        flex-direction: column;
-        gap: 5px;
+        flex-direction: column; /* Itens empilhados verticalmente */
+        gap: 5px; /* Espaço menor entre os itens */
     }
-    
+
     .link-in-bio-link-row input {
-        width: 100%;
+        width: 100%; /* Input ocupa toda a largura */
     }
 }
 
+/* Estilo do campo de bio (texto descritivo do perfil) */
 .link-in-bio-profile-bio textarea {
-    min-height: 100px;
-    width: 100%;
-    max-width: 600px;
+    min-height: 100px; /* Altura mínima */
+    width: 100%; /* Ocupa toda a largura disponível */
+    max-width: 600px; /* Limite máximo de largura */
 }
 
-#link-in-bio-remove-image{
-    color:red;
-    border-color: red;
+/* Estilo específico para botão de remover imagem */
+#link-in-bio-remove-image {
+    color: red; /* Texto em vermelho */
+    border-color: red; /* Borda vermelha */
 }
 
-.btn-link-in-bio-remove{
-    color: red !important;;
-    border-color: red!important;
-};
+/* Classe para botões de remoção de links */
+.btn-link-in-bio-remove {
+    color: red !important; /* Força a cor vermelha do texto */
+    border-color: red !important; /* Força a cor da borda vermelha */
+}

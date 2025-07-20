@@ -2,13 +2,13 @@ jQuery(document).ready(function ($) {
     let mediaFrame;
 
     /**
-     * Adiciona novo link
+     * Adiciona novo link à lista dinamicamente
      */
     $('#link-in-bio-add').on('click', function () {
         const container = $('#link-in-bio-links-container');
-        const index = Date.now(); // Timestamp único para garantir ids/nomes únicos
+        const index = Date.now(); // Usa timestamp como identificador único
 
-        // O HTML foi atualizado com classes Tailwind para responsividade
+        // HTML do novo bloco de link, com classes Tailwind para estilização
         const html = `
         <div class="link-in-bio-link p-4 border border-gray-200 rounded-md bg-gray-50 flex flex-wrap items-center gap-2 sm:gap-4">
             <div class="flex-grow">
@@ -36,26 +36,24 @@ jQuery(document).ready(function ($) {
             </div>
         </div>`;
 
-        container.append(html);
-        // Animação para scrollar até o novo link
-        container.animate({ scrollTop: container.prop("scrollHeight") }, 300);
+        container.append(html); // Adiciona o novo HTML
+        container.animate({ scrollTop: container.prop("scrollHeight") }, 300); // Animação para rolar até o final
     });
 
     /**
-     * Remover link
+     * Remove link existente ao clicar no botão "Remover"
      */
     $(document).on('click', '.link-in-bio-remove', function () {
         if (confirm(wp.i18n.__('Tem certeza que deseja remover este link?', 'link-in-bio'))) {
             $(this).closest('.link-in-bio-link').fadeOut(300, function () {
-                $(this).remove();
-                // Chama updatePreview após a remoção e animação
-                setTimeout(updatePreview, 0); // O timeout 0 garante que ele seja agendado após o 'remove()'
+                $(this).remove(); // Remove após fade
+                setTimeout(updatePreview, 0); // Atualiza preview após remoção
             });
         }
     });
 
     /**
-     * Abrir uploader de mídia
+     * Função genérica para abrir o seletor de mídia do WordPress
      */
     function openMediaUploader(fieldId, previewSelector, removeButtonSelector) {
         mediaFrame = wp.media({
@@ -67,8 +65,8 @@ jQuery(document).ready(function ($) {
 
         mediaFrame.on('select', function () {
             const attachment = mediaFrame.state().get('selection').first().toJSON();
-            $(fieldId).val(attachment.url).trigger('change'); // Adicionado .trigger('change')
-            $(previewSelector).html(`<img src="${attachment.url}" alt="" class="max-w-[150px] h-auto rounded-md object-cover shadow-sm">`); // Classes Tailwind para preview
+            $(fieldId).val(attachment.url).trigger('change');
+            $(previewSelector).html(`<img src="${attachment.url}" alt="" class="max-w-[150px] h-auto rounded-md object-cover shadow-sm">`);
             if (removeButtonSelector) {
                 $(removeButtonSelector).show();
             }
@@ -78,61 +76,65 @@ jQuery(document).ready(function ($) {
     }
 
     /**
-     * Imagem de perfil
+     * Upload de imagem de perfil
      */
     $('#link-in-bio-upload-image').on('click', function (e) {
         e.preventDefault();
         openMediaUploader('#link_in_bio_profile_image', '#link-in-bio-image-preview', '#link-in-bio-remove-image');
     });
 
+    /**
+     * Remoção da imagem de perfil
+     */
     $('#link-in-bio-remove-image').on('click', function (e) {
         e.preventDefault();
         if (confirm(wp.i18n.__('Remover imagem de perfil?', 'link-in-bio'))) {
-            $('#link_in_bio_profile_image').val('').trigger('change'); // Adicionado .trigger('change')
+            $('#link_in_bio_profile_image').val('').trigger('change');
             $('#link-in-bio-image-preview').empty();
             $(this).hide();
         }
     });
 
     /**
-     * Imagem de fundo
+     * Upload da imagem de fundo
      */
     $('#upload-background-image').on('click', function (e) {
         e.preventDefault();
-        openMediaUploader('#link_in_bio_background_image', '#link-in-bio-background-preview', '#remove-background-image'); // Adicionado removeButtonSelector
+        openMediaUploader('#link_in_bio_background_image', '#link-in-bio-background-preview', '#remove-background-image');
     });
 
+    /**
+     * Remoção da imagem de fundo
+     */
     $('#remove-background-image').on('click', function (e) {
         e.preventDefault();
         if (confirm(wp.i18n.__('Remover imagem de fundo?', 'link-in-bio'))) {
-            $('#link_in_bio_background_image').val('').trigger('change'); // Adicionado .trigger('change')
+            $('#link_in_bio_background_image').val('').trigger('change');
             $('#link-in-bio-background-preview').empty();
-            $(this).hide(); // Esconder o botão de remover imagem de fundo
+            $(this).hide();
         }
     });
 
-    // Esconde o botão de remover imagem de perfil se não houver imagem
-    // Isso deve ser feito na carga, não no mediaUploader
+    /**
+     * Esconde botões de "Remover imagem" caso não haja imagem definida
+     */
     if (!$('#link_in_bio_profile_image').val()) {
         $('#link-in-bio-remove-image').hide();
     }
-    // Esconde o botão de remover imagem de fundo se não houver imagem
     if (!$('#link_in_bio_background_image').val()) {
         $('#remove-background-image').hide();
     }
 
-
     const $form = $('#link-in-bio-settings-form');
     let previewTimeout;
 
+    /**
+     * Atualiza o preview com AJAX após mudanças no formulário
+     */
     function updatePreview() {
-        // Limpa qualquer timeout anterior para evitar chamadas múltiplas
-        clearTimeout(previewTimeout);
-
-        // Define um novo timeout para chamar o AJAX após um breve atraso
+        clearTimeout(previewTimeout); // Cancela execuções anteriores
         previewTimeout = setTimeout(function() {
             const formData = $form.serialize();
-
             $.post(LinkInBioData.ajax_url, {
                 action: 'link_in_bio_preview',
                 nonce: LinkInBioData.nonce,
@@ -140,29 +142,33 @@ jQuery(document).ready(function ($) {
             }, function(response) {
                 $('#link-in-bio-preview-content').html(response);
             });
-        }, 300); // Pequeno delay de 300ms para aguardar entradas do usuário ou animações
+        }, 300); // Delay de 300ms para evitar chamadas excessivas
     }
 
-    // Atualiza o preview ao alterar qualquer campo
-    // Usa 'input' para capturar mudanças em tempo real em campos de texto
-    // e 'change' para outros tipos como select, checkbox, radio
+    /**
+     * Escuta alterações no formulário para atualizar o preview em tempo real
+     */
     $form.on('change input', 'input, select, textarea', function () {
         updatePreview();
     });
 
-    // Oculta o botão de remover imagem de fundo se não houver imagem
+    /**
+     * Oculta botão de remover imagem de fundo se não houver imagem no carregamento
+     */
     $('#link-in-bio-background-preview:empty').each(function() {
         if ($(this).children().length === 0) {
             $('#remove-background-image').hide();
         }
     });
 
-
-    // Inicia a pré-visualização na carga da página
+    /**
+     * Inicializa a visualização de preview ao carregar a página
+     */
     updatePreview();
 
-
-    //navegação em abas.
+    /**
+     * Navegação entre abas nas configurações do admin
+     */
     $('.nav-tab').click(function(e) {
         e.preventDefault();
         $('.nav-tab').removeClass('nav-tab-active');
@@ -172,11 +178,9 @@ jQuery(document).ready(function ($) {
         const target = $(this).attr('href');
         $(target).show();
 
-        // Garante que o preview seja atualizado ao mudar de aba
-        updatePreview();
+        updatePreview(); // Atualiza preview ao trocar de aba
     });
 
-    // Ativa a primeira aba ao carregar a página
+    // Ativa a primeira aba automaticamente ao carregar a página
     $('.nav-tab-wrapper a').first().click();
-
 });
