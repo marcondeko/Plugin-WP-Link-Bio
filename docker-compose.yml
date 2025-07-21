@@ -1,49 +1,50 @@
 services:
   db:
-    image: mysql:5.7
-    container_name: wordpress_db_plugin
+    image: mysql:5.7                        # Usa a imagem oficial do MySQL versão 5.7
+    container_name: wordpress_db_plugin     # Nome do contêiner para o banco de dados
     environment:
-      MYSQL_DATABASE: wordpress
-      MYSQL_USER: wordpress
-      MYSQL_PASSWORD: wordpress
-      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: wordpress             # Cria automaticamente o banco de dados 'wordpress'
+      MYSQL_USER: wordpress                 # Cria o usuário 'wordpress'
+      MYSQL_PASSWORD: wordpress             # Senha do usuário
+      MYSQL_ROOT_PASSWORD: root_password    # Senha do usuário root (administrador do MySQL)
     volumes:
-      - db_data:/var/lib/mysql
+      - db_data:/var/lib/mysql              # Persistência dos dados em volume nomeado
     networks:
-      - wordpress_network
+      - wordpress_network                   # Conecta o contêiner a uma rede interna
 
   wordpress:
-    image: wordpress:latest
-    container_name: wordpress_plugin
+    image: wordpress:latest                 # Usa a imagem oficial do WordPress (última versão)
+    container_name: wordpress_plugin        # Nome do contêiner do WordPress
     depends_on:
-      - db
+      - db                                  # Aguarda o serviço de banco de dados estar disponível
     ports:
-      - "8010:80"
+      - "8010:80"                           # Mapeia a porta 80 do contêiner para a 8010 do host
     volumes:
       - ./wordpress/wp-content/plugins:/var/www/html/wp-content/plugins
+      # Monta o diretório local de plugins para dentro do contêiner (útil para desenvolvimento)
     environment:
-      WORDPRESS_DB_HOST: db:3306
-      WORDPRESS_DB_USER: wordpress
-      WORDPRESS_DB_PASSWORD: wordpress
-      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_HOST: db:3306            # Informa onde está o banco de dados (nome do serviço e porta)
+      WORDPRESS_DB_USER: wordpress          # Usuário do banco de dados
+      WORDPRESS_DB_PASSWORD: wordpress      # Senha do banco de dados
+      WORDPRESS_DB_NAME: wordpress          # Nome do banco de dados
     networks:
-      - wordpress_network
+      - wordpress_network                   # Conecta à mesma rede que o banco
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    container_name: phpmyadmin_plugin
+    image: phpmyadmin/phpmyadmin:latest     # Interface web para gerenciar o MySQL
+    container_name: phpmyadmin_plugin       # Nome do contêiner do phpMyAdmin
     depends_on:
-      - db
+      - db                                  # Aguarda o banco de dados estar disponível
     ports:
-      - "8081:80"
+      - "8081:80"                           # Mapeia a porta 80 do contêiner para a 8081 do host
     environment:
-      PMA_HOST: db
-      MYSQL_ROOT_PASSWORD: root_password
+      PMA_HOST: db                          # Informa ao phpMyAdmin onde está o banco
+      MYSQL_ROOT_PASSWORD: root_password    # Autenticação como root no MySQL
     networks:
-      - wordpress_network
+      - wordpress_network                   # Conecta à mesma rede que o banco e o WordPress
 
 volumes:
-  db_data:
+  db_data:                                  # Volume nomeado para armazenar dados do MySQL
 
 networks:
-  wordpress_network:
+  wordpress_network:                        # Rede Docker interna para os contêineres se comunicarem
