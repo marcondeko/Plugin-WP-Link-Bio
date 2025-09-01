@@ -1,0 +1,21 @@
+{
+  "name": "link-in-bio",
+  "version": "1.0.0",
+  "description": "Build process for Link in Bio plugin.",
+  "main": "index.js",
+  "scripts": {
+    "build:admin": "tailwindcss -i ./assets/src/admin.css -o ./assets/css/admin.css --config ./tailwind.admin.config.js --minify",
+    "build:front": "tailwindcss -i ./assets/src/style.css -o ./assets/css/style.css --config ./tailwind.front.config.js --minify",
+    "build": "npm run build:admin && npm run build:front"
+  },
+  "keywords": [
+    "wordpress",
+    "plugin",
+    "tailwind"
+  ],
+  "author": "Diego Marcondes",
+  "license": "MIT",
+  "devDependencies": {
+    "tailwindcss": "^3.4.1"
+  }
+}

@@ -1,67 +1,76 @@
-/* Estilos gerais para o container de links */
-.link-in-bio-links-container {
-    margin-bottom: 20px; /* Espaço inferior entre os blocos de links e outros elementos */
-}
+/* Manually compiled TailwindCSS classes for admin panel */
 
-/* Estilo individual de cada link na lista */
-.link-in-bio-link {
-    background: #f6f7f7; /* Cor de fundo suave */
-    border-left: 4px solid #2271b1; /* Borda esquerda azul para destaque */
-    padding: 15px; /* Espaçamento interno */
-    margin-bottom: 15px; /* Espaço entre os links */
-}
+.flex { display: flex; }
+.flex-wrap { flex-wrap: wrap; }
+.items-start { align-items: flex-start; }
+.items-center { align-items: center; }
+.gap-2 { gap: 0.5rem; }
+.gap-8 { gap: 2rem; }
+.flex-1 { flex: 1 1 0%; }
+.flex-grow { flex-grow: 1; }
+.flex-shrink-0 { flex-shrink: 0; }
 
-/* Linha que agrupa input + botão */
-.link-in-bio-link-row {
-    display: flex; /* Alinha os itens horizontalmente */
-    gap: 10px; /* Espaçamento entre os elementos */
-    align-items: center; /* Alinha verticalmente os elementos ao centro */
-}
+.p-2 { padding: 0.5rem; }
+.p-4 { padding: 1rem; }
+.p-6 { padding: 1.5rem; }
+.py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+.px-4 { padding-left: 1rem; padding-right: 1rem; }
+.mt-4 { margin-top: 1rem; }
+.mb-3 { margin-bottom: 0.75rem; }
+.mb-4 { margin-bottom: 1rem; }
+.ml-4 { margin-left: 1rem; }
 
-/* Input dos links */
-.link-in-bio-link-row input {
-    flex: 1; /* Ocupa o maior espaço possível */
-    max-width: 100%; /* Evita que ultrapasse o container */
-}
+.min-w-\[300px\] { min-width: 300px; }
+.w-full { width: 100%; }
+.max-w-\[100px\] { max-width: 100px; }
+.max-w-\[150px\] { max-width: 150px; }
+.h-auto { height: auto; }
 
-/* Botões de ação (Adicionar/Remover) */
-.link-in-bio-link-row .button {
-    margin: 0; /* Remove margens padrão */
-}
+.bg-white { background-color: #fff; }
+.bg-gray-50 { background-color: #f9fafb; }
+.bg-red-600 { background-color: #dc2626; }
+.hover\:bg-red-700:hover { background-color: #b91c1c; }
+.bg-purple-600 { background-color: #9333ea; }
+.hover\:bg-purple-700:hover { background-color: #7e22ce; }
 
-/* Estilo da imagem de perfil */
-.link-in-bio-profile-image img {
-    border-radius: 50%; /* Imagem circular */
-    border: 2px solid #ddd; /* Borda cinza clara */
-}
+.border { border-width: 1px; }
+.border-gray-200 { border-color: #e5e7eb; }
+.border-gray-300 { border-color: #d1d5db; }
+.rounded-lg { border-radius: 0.5rem; }
+.rounded-md { border-radius: 0.375rem; }
+.rounded-full { border-radius: 9999px; }
 
-/* Responsividade para telas menores (até 782px) */
-@media (max-width: 782px) {
-    .link-in-bio-link-row {
-        flex-direction: column; /* Itens empilhados verticalmente */
-        gap: 5px; /* Espaço menor entre os itens */
-    }
+.shadow-sm { box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); }
+.shadow-md { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
 
-    .link-in-bio-link-row input {
-        width: 100%; /* Input ocupa toda a largura */
-    }
-}
+.text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+.sm\:text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+.text-white { color: #fff; }
+.text-gray-800 { color: #1f2937; }
 
-/* Estilo do campo de bio (texto descritivo do perfil) */
-.link-in-bio-profile-bio textarea {
-    min-height: 100px; /* Altura mínima */
-    width: 100%; /* Ocupa toda a largura disponível */
-    max-width: 600px; /* Limite máximo de largura */
-}
+.block { display: block; }
+.object-cover { object-fit: cover; }
+.transition { transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
+.duration-150 { transition-duration: 150ms; }
+.space-y-4 > :not([hidden]) ~ :not([hidden]) { --tw-space-y-reverse: 0; margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse))); margin-bottom: calc(1rem * var(--tw-space-y-reverse)); }
 
-/* Estilo específico para botão de remover imagem */
-#link-in-bio-remove-image {
-    color: red; /* Texto em vermelho */
-    border-color: red; /* Borda vermelha */
-}
+.focus\:border-purple-500:focus { border-color: #a855f7; }
+.focus\:ring-purple-500:focus { --tw-ring-color: #a855f7; }
 
-/* Classe para botões de remoção de links */
-.btn-link-in-bio-remove {
-    color: red !important; /* Força a cor vermelha do texto */
-    border-color: red !important; /* Força a cor da borda vermelha */
-}
+/* WordPress specific classes that might be needed */
+.wrap { margin: 10px 20px 0 2px; }
+.wp-heading-inline { display: inline-block; }
+.regular-text { width: 25em; }
+.widefat { width: 100%; }
+.large-text { width: 99%; }
+.description { color: #646970; font-size: 13px; }
+.button { display: inline-block; text-decoration: none; font-size: 13px; line-height: 2.15384615; min-height: 30px; margin: 0; padding: 0 10px; cursor: pointer; border-width: 1px; border-style: solid; -webkit-appearance: none; border-radius: 3px; white-space: nowrap; box-sizing: border-box; }
+.button-primary { background: #2271b1; border-color: #2271b1; color: #fff; }
+.button-secondary { background: #f6f7f7; border-color: #007cba; color: #007cba; }
+.button-danger { border-color: #d63638; color: #d63638; }
+.nav-tab-wrapper { border-bottom: 1px solid #ccc; margin: 0; padding-top: 9px; padding-bottom: 0; line-height: inherit; }
+.nav-tab { background: #f0f0f1; border: 1px solid #ccc; padding: 4px 14px; margin-right: 4px; text-decoration: none; font-size: 14px; }
+.nav-tab-active { background: #fff; border-bottom-color: #fff; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0; }

@@ -56,8 +56,7 @@ function link_in_bio_display_links() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?php echo esc_html($options['profile_title']); ?></title>
         
-        <!-- Tailwind CSS via CDN -->
-        <script src="https://cdn.tailwindcss.com"></script>
+        <?php wp_head(); ?>
 
         <!-- Estilos responsivos personalizados -->
         <style>
@@ -115,20 +114,6 @@ function link_in_bio_display_links() {
                 <?php endforeach; ?>
             </div>
             
-            <!-- Ícones sociais (se existirem) -->
-            <?php if (!empty($options['social_links'])) : ?>
-                <div class="flex justify-center gap-4 mt-8">
-                    <?php foreach ($options['social_links'] as $social) : ?>
-                        <a href="<?php echo esc_url($social['url']); ?>" 
-                           target="_blank" 
-                           rel="noopener noreferrer"
-                           class="text-2xl hover:opacity-70 transition"
-                           style="color: <?php echo $button_color; ?>;">
-                            <?php echo esc_html($social['icon']); ?>
-                        </a>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
         </div>
     </div>
     </body>
