@@ -38,16 +38,7 @@ function link_in_bio_admin_assets($hook) {
     // WordPress Media Uploader (necessário para upload de imagens)
     wp_enqueue_media();
 
-    // Tailwind CSS (via CDN - em produção considere compilar localmente)
-    wp_enqueue_script(
-        'tailwind-cdn-admin',          // Identificador único
-        'https://cdn.tailwindcss.com', // CDN do Tailwind
-        [],                            // Sem dependências
-        null,                          // Sem versão (CDN sempre atual)
-        true                           // No footer (melhor performance)
-    );
-
-    // CSS personalizado do admin
+    // CSS personalizado do admin (gerado a partir do Tailwind)
     wp_enqueue_style(
         'link-in-bio-admin',                          // Handle
         LINK_IN_BIO_PLUGIN_URL . 'assets/css/admin.css', // URL do arquivo
@@ -169,6 +160,22 @@ class Link_In_Bio_Admin {
         // Campos da seção Estilo
         add_settings_field('background_color', __('Cor de Fundo', 'link-in-bio'), [$this, 'render_background_color_field'], 'link_in_bio_style_tab', 'link_in_bio_style_section');
         add_settings_field('background_image', __('Imagem de Fundo', 'link-in-bio'), [$this, 'render_background_image_field'], 'link_in_bio_style_tab', 'link_in_bio_style_section');
+
+        // --- Seção: Avançado ---
+        add_settings_section(
+            'link_in_bio_advanced_section',
+            __('Configurações Avançadas', 'link-in-bio'),
+            [$this, 'render_advanced_section_callback'],
+            'link_in_bio_advanced_tab'
+        );
+
+        add_settings_field(
+            'page_slug',
+            __('URL da Página (Slug)', 'link-in-bio'),
+            [$this, 'render_page_slug_field'],
+            'link_in_bio_advanced_tab',
+            'link_in_bio_advanced_section'
+        );
     }
 
     /**
@@ -208,6 +215,13 @@ class Link_In_Bio_Admin {
         // Sanitiza imagem de fundo
         $sanitized['background_image'] = esc_url_raw($input['background_image'] ?? '');
 
+        // Sanitiza o slug da página
+        if (!empty($input['page_slug'])) {
+            $sanitized['page_slug'] = sanitize_title($input['page_slug']);
+        } else {
+            $sanitized['page_slug'] = 'meus-links'; // Padrão
+        }
+
         return $sanitized;
     }
 
@@ -224,6 +238,10 @@ class Link_In_Bio_Admin {
 
     public function render_style_section_callback() {
         echo '<p class="description">' . __('Personalize as cores e imagens de fundo da sua página de links.', 'link-in-bio') . '</p>';
+    }
+
+    public function render_advanced_section_callback() {
+        echo '<p class="description">' . __('Configurações para usuários avançados. Tenha cuidado ao modificar estas opções.', 'link-in-bio') . '</p>';
     }
 
     /**
@@ -245,6 +263,7 @@ class Link_In_Bio_Admin {
                             <a href="#tab-profile" class="nav-tab nav-tab-active"><?php _e('Perfil', 'link-in-bio'); ?></a>
                             <a href="#tab-links" class="nav-tab"><?php _e('Links', 'link-in-bio'); ?></a>
                             <a href="#tab-style" class="nav-tab"><?php _e('Estilo', 'link-in-bio'); ?></a>
+                            <a href="#tab-advanced" class="nav-tab"><?php _e('Avançado', 'link-in-bio'); ?></a>
                         </h2>
 
                         <!-- Conteúdo das Abas -->
@@ -258,6 +277,10 @@ class Link_In_Bio_Admin {
 
                         <div class="tab-content" id="tab-style" style="display:none;">
                             <?php do_settings_sections('link_in_bio_style_tab'); ?>
+                        </div>
+
+                        <div class="tab-content" id="tab-advanced" style="display:none;">
+                            <?php do_settings_sections('link_in_bio_advanced_tab'); ?>
                         </div>
 
                         <?php submit_button(__('Salvar Alterações', 'link-in-bio'), 'primary mt-4'); ?>
@@ -432,6 +455,21 @@ class Link_In_Bio_Admin {
                 <?php endif; ?>
             </div>
         </div>
+        <?php
+    }
+
+    public function render_page_slug_field() {
+        $options = get_option('link_in_bio_options');
+        $slug = $options['page_slug'] ?? 'meus-links';
+        ?>
+        <input type="text" name="link_in_bio_options[page_slug]" value="<?php echo esc_attr($slug); ?>" class="regular-text">
+        <p class="description">
+            <?php _e('Personalize a URL da sua página. Ex: ', 'link-in-bio'); ?>
+            <code><?php echo esc_url(home_url('/')); ?><strong><?php echo esc_attr($slug); ?></strong></code>
+        </p>
+        <p class="description">
+            <?php _e('Use apenas letras minúsculas, números e hífens.', 'link-in-bio'); ?>
+        </p>
         <?php
     }
 }
