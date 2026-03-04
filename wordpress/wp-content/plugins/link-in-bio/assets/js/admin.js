@@ -127,6 +127,7 @@ jQuery(document).ready(function ($) {
 
     const $form = $('#link-in-bio-settings-form');
     let previewTimeout;
+    let previewRequest = null;
 
     /**
      * Atualiza o preview com AJAX após mudanças no formulário
@@ -135,7 +136,12 @@ jQuery(document).ready(function ($) {
         clearTimeout(previewTimeout); // Cancela execuções anteriores
         previewTimeout = setTimeout(function() {
             const formData = $form.serialize();
-            $.post(LinkInBioData.ajax_url, {
+
+            if (previewRequest && previewRequest.readyState !== 4) {
+                previewRequest.abort();
+            }
+
+            previewRequest = $.post(LinkInBioData.ajax_url, {
                 action: 'link_in_bio_preview',
                 nonce: LinkInBioData.nonce,
                 formData: formData
