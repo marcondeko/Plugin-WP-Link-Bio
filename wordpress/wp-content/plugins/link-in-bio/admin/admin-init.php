@@ -38,13 +38,12 @@ function link_in_bio_admin_assets($hook) {
     // WordPress Media Uploader (necessário para upload de imagens)
     wp_enqueue_media();
 
-    // Tailwind CSS (via CDN - em produção considere compilar localmente)
-    wp_enqueue_script(
-        'tailwind-cdn-admin',          // Identificador único
-        'https://cdn.tailwindcss.com', // CDN do Tailwind
-        [],                            // Sem dependências
-        null,                          // Sem versão (CDN sempre atual)
-        true                           // No footer (melhor performance)
+    // Tailwind CSS pré-compilado (mais leve do que gerar estilos via JS em runtime)
+    wp_enqueue_style(
+        'tailwind-cdn-admin',
+        'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css',
+        [],
+        '2.2.19'
     );
 
     // CSS personalizado do admin
@@ -59,7 +58,7 @@ function link_in_bio_admin_assets($hook) {
     wp_enqueue_script(
         'link-in-bio-admin-js',                       // Handle
         LINK_IN_BIO_PLUGIN_URL . 'assets/js/admin.js', // URL do arquivo
-        ['jquery'],                                   // Depende do jQuery
+        ['jquery', 'wp-i18n'],                        // Dependências do script
         filemtime(LINK_IN_BIO_PLUGIN_DIR . 'assets/js/admin.js'), // Versionamento
         true                                          // No footer
     );

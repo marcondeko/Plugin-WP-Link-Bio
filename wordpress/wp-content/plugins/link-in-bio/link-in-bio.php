@@ -57,11 +57,12 @@ function link_in_bio_deactivate() {
         require_once ABSPATH . 'wp-admin/includes/post.php';
     }
 
-    $existing_page = get_page_by_path('meus-links');
+    $created_page_id = absint(get_option('link_in_bio_page_id', 0));
 
-    // Deleta a página sem enviar para a lixeira
-    if ($existing_page) {
-        wp_delete_post($existing_page->ID, false);
+    // Remove apenas a página criada pelo plugin na ativação
+    if ($created_page_id > 0 && get_post($created_page_id)) {
+        wp_delete_post($created_page_id, true);
+        delete_option('link_in_bio_page_id');
     }
 }
 register_deactivation_hook(__FILE__, 'link_in_bio_deactivate');
@@ -90,6 +91,7 @@ function link_in_bio_create_page() {
         // Define o template da página
         if (!is_wp_error($page_id)) {
             update_post_meta($page_id, '_wp_page_template', 'link-in-bio-template.php');
+            update_option('link_in_bio_page_id', absint($page_id));
         }
     }
 }
